@@ -43,10 +43,11 @@ public class PollService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (!isNetworkAvailableOrConnected())
-            return;
-
         Log.d(TAG, "onHandleIntent: " + intent.toString());
+        if (!isNetworkAvailableOrConnected()) {
+            return;
+        }
+
         Services.pollFromServerAndNotify(this, TAG);
     }
 
@@ -73,17 +74,21 @@ public class PollService extends IntentService {
                 (AlarmManager) context.getSystemService(ALARM_SERVICE);
 
         if (isOn) {
+            Log.d(TAG, "Schedule Alarm Manager");
             alarmManager.setInexactRepeating(
                     AlarmManager.ELAPSED_REALTIME,
                     SystemClock.elapsedRealtime(),
                     INTERVAL_MILLIS,
                     pendingIntent);
         } else {
+            Log.d(TAG, "Cancel Alarm Manager");
             alarmManager.cancel(pendingIntent);
 
             //very very very important to notice
             pendingIntent.cancel();
         }
+
+        QueryPreferences.setAlarmOn(context, isOn);
     }
 
     public static boolean isServiceOn(Context context) {

@@ -7,6 +7,7 @@ public class QueryPreferences {
 
     private static final String PREF_KEY_SEARCH = "searchQuery";
     private static final String PREF_LAST_RESULT_ID = "lastResultId";
+    private static final String PREF_IS_ALARM_ON = "isAlarmOn";
 
     public static String getSearchQuery(Context context) {
         SharedPreferences preferences = getDefaultSharedPreferences(context);
@@ -32,6 +33,17 @@ public class QueryPreferences {
                 .edit()
                 .putString(PREF_LAST_RESULT_ID, lastResultId)
                 .apply();;
+    }
+
+    public static boolean isAlarmOn(Context context) {
+        return getDefaultSharedPreferences(context).getBoolean(PREF_IS_ALARM_ON, false);
+    }
+
+    public static void setAlarmOn(Context context, boolean isOn) {
+        getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_IS_ALARM_ON, isOn)
+                .apply();
     }
 
     private static SharedPreferences getDefaultSharedPreferences(Context context) {

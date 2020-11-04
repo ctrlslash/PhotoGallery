@@ -63,24 +63,17 @@ public class PhotoGalleryViewModel extends AndroidViewModel {
         QueryPreferences.setSearchQuery(getApplication(), query);
     }
 
-    public void startPollService() {
-        getApplication().startService(PollService.newIntent(getApplication()));
-    }
-
-    public void schedulePollService(Activity activity) {
-        PollService.setServiceAlarm(activity, true);
-    }
-
     public void togglePollService(Activity activity) {
         boolean isOn = isServiceOnOrScheduled(activity);
+        PollService.setServiceAlarm(activity, !isOn);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             //schedule PollService in Alarm Manager
             PollService.setServiceAlarm(activity, !isOn);
         } else {
             //scheduler PollJobService in Job Scheduler
             PollJobService.scheduleJob(activity, !isOn);
-        }
+        }*/
     }
 
     public int getTogglePollingTitle(Activity activity) {
@@ -91,10 +84,12 @@ public class PhotoGalleryViewModel extends AndroidViewModel {
     }
 
     public boolean isServiceOnOrScheduled(Activity activity) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        return PollService.isServiceOn(activity);
+
+        /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             return PollService.isServiceOn(activity);
         } else {
             return PollJobService.isJobScheduled(activity);
-        }
+        }*/
     }
 }
